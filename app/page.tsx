@@ -18,7 +18,7 @@ export default function Home(){
  <section className="hero">
  <header><a className="brand" href="#home" aria-label="Parallel Café home"><Mark/><span>PARALLEL<br/>CAFÈ</span></a><nav className={mobile?'nav open':'nav'} aria-label="Main navigation">{[['Home','home'],['Our story','story'],['The menu','menu'],['The space','space']].map(([label,id],i)=><a key={id} className={i===0?'active':''} href={'#'+id} onClick={()=>setMobile(false)}>{label}</a>)}</nav><a className="visit-link" href="#visit">COME SAY HELLO <ArrowUpRight size={18}/></a><button className="mobile-toggle" onClick={()=>setMobile(!mobile)} aria-expanded={mobile} aria-label="Toggle menu">{mobile?<X/>:<Menu/>}</button></header>
  <div className="hero-topline"><span>COFFEE, COMPANY & A LITTLE IN BETWEEN.</span><span>YOUR EVERYDAY ESCAPE ↘</span></div>
- <h1 key={slide}>{slides[slide].title}</h1><Cup/>
+ <h1 key={slide} className={slide === 1 ? "long-title" : ""}>{slides[slide].title}</h1><Cup/>
  <div className="hero-bottom"><div className="hero-intro"><p>{slides[slide].copy}</p><div className="slide-controls"><button aria-label="Previous slide" onClick={()=>setSlide((slide+1)%2)}><ArrowLeft size={20}/></button><button aria-label="Next slide" onClick={()=>setSlide((slide+1)%2)}><ArrowRight size={20}/></button><span>0{slide+1}<i/>02</span></div></div><div className="hero-right"><p>{slides[slide].tag}</p><a className="cream-button" href="#menu">Find your favourite <ArrowUpRight size={19}/></a></div></div>
  <a className="scroll-note" href="#story">SCROLL TO SLOW DOWN <span>↓</span></a>
  </section>
