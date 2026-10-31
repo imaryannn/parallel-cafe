@@ -155,6 +155,20 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="brew-sequence" id="ritual" aria-label="From bean to cup, a scroll-driven coffee-making sequence">
+          <div className="brew-copy">
+            <p className="brew-intro">A LITTLE CARE. EVERY STEP.</p>
+            <h2>From bean.<br/><em>To your cup.</em></h2>
+            <div className="brew-captions">
+              <div className="brew-caption is-current"><h3>Good things start here.</h3><p>Whole beans. Full of possibility.</p></div>
+              <div className="brew-caption"><h3>A finer kind of ritual.</h3><p>Freshly ground. Ready for the slow pour.</p></div>
+              <div className="brew-caption"><h3>Worth the wait.</h3><p>Watch your coffee find its way into the cup.</p></div>
+              <div className="brew-caption"><h3>Made for your day.</h3><p>One last touch. Your Parallel is ready.</p></div>
+            </div>
+          </div>
+          <div className="brew-footer"><a href="#craft">Skip to the craft ↗</a><div className="brew-progress" aria-label="Coffee-making steps">{['The beans','The grind','The pour','Your Parallel'].map((step,i)=><span key={step} className={i===0?'is-current':''}>{step}</span>)}</div><span className="brew-scroll">KEEP SCROLLING ↓</span></div>
+        </section>
+
         <section id="craft" className="craft section">
           <div className="eyebrow"><span>THE CRAFT</span><span>SLOW BY DESIGN</span></div>
           <div className="craft-stage">

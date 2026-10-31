@@ -83,31 +83,44 @@ export default function ScrollExperience({ children }: { children: ReactNode }) 
       const sip = new THREE.Mesh(new THREE.SphereGeometry(1,24,12), new THREE.MeshStandardMaterial({color:'#102419',roughness:.9}));
       sip.scale.set(.18,.013,.06); sip.position.set(0,.228,.73); lid.add(sip);
 
-      // Five screen-space compositions: intro, reveal, craft, supporting menu, closing return.
-      const desktop: Pose[] = [
-        { nx:0, y:-1.78, z:.2, rx:.10, ry:-.16, rz:-.16, scale:1.68, lid:0 },
-        { nx:.47, y:-.15, z:0, rx:.04, ry:.22, rz:.10, scale:1.02, lid:0 },
-        { nx:-.05, y:-.10, z:0, rx:.20, ry:-.10, rz:.05, scale:1.00, lid:0 },
-        { nx:.55, y:.40, z:0, rx:.06, ry:-.30, rz:-.04, scale:.90, lid:0 },
-        { nx:.20, y:-.96, z:.1, rx:.08, ry:-.02, rz:-.04, scale:1.58, lid:.18 },
-      ];
-      const tablet: Pose[] = [
-        { nx:0, y:-1.35, z:.1, rx:.10, ry:-.16, rz:-.15, scale:1.10, lid:0 },
-        { nx:.47, y:-.15, z:0, rx:.04, ry:.22, rz:.10, scale:.92, lid:0 },
-        { nx:-.05, y:-.10, z:0, rx:.20, ry:-.10, rz:.05, scale:.85, lid:0 },
-        { nx:.55, y:.40, z:0, rx:.06, ry:-.30, rz:-.04, scale:.75, lid:0 },
-        { nx:.20, y:-.14, z:.1, rx:.08, ry:-.02, rz:-.04, scale:1.06, lid:.18 },
-      ];
-      const handheld: Pose[] = [
-        { nx:.06, y:-1.15, z:0, rx:.10, ry:-.16, rz:-.14, scale:1.12, lid:0 },
-        { nx:.52, y:1.18, z:0, rx:.04, ry:.52, rz:.18, scale:.70, lid:0 },
-        { nx:.30, y:.20, z:0, rx:.20, ry:-.10, rz:.04, scale:.70, lid:0 },
-        { nx:.30, y:.80, z:0, rx:.06, ry:-.30, rz:-.03, scale:.70, lid:0 },
-        { nx:.18, y:.28, z:0, rx:.10, ry:-.02, rz:-.04, scale:.82, lid:.30 },
-      ];
-      const poses = mobile ? handheld : matchMedia('(max-width: 900px)').matches ? tablet : desktop;
-      const pose: Pose = { ...poses[0] };
-
+      // A miniature coffee studio, built from real geometry rather than a video.
+      const studio = new THREE.Group(); scene.add(studio); studio.visible = false;
+      const metal = new THREE.MeshStandardMaterial({color:'#87968a',metalness:.72,roughness:.28});
+      const darkMetal = new THREE.MeshStandardMaterial({color:'#143520',metalness:.35,roughness:.4});
+      const bronze = new THREE.MeshStandardMaterial({color:'#8a502c',metalness:.15,roughness:.65});
+      const grinder = new THREE.Group(); studio.add(grinder);
+      function part(geometry: import('three').BufferGeometry<import('three').NormalBufferAttributes>, material: InstanceType<typeof THREE.Material>, y:number, parent=grinder) {
+        const mesh=new THREE.Mesh(geometry,material); mesh.position.y=y;parent.add(mesh);return mesh;
+      }
+      part(new THREE.CylinderGeometry(.65,.36,.7,64,1,true),new THREE.MeshPhysicalMaterial({color:'#c9d5b0',transparent:true,opacity:.23,roughness:.15,side:THREE.DoubleSide}),2.1);
+      const hopperRim=part(new THREE.TorusGeometry(.65,.025,8,64),metal,2.45);hopperRim.rotation.x=Math.PI/2;
+      part(new THREE.CylinderGeometry(.48,.48,.42,64),darkMetal,1.55);
+      part(new THREE.CylinderGeometry(.51,.51,.08,64),metal,1.75);
+      const burr=new THREE.Group();grinder.add(burr);burr.position.y=1.62;
+      for(let i=0;i<16;i++){const tooth=new THREE.Mesh(new THREE.BoxGeometry(.06,.18,.4),metal);const angle=i/16*Math.PI*2;tooth.position.set(Math.cos(angle)*.3,0,Math.sin(angle)*.3);tooth.rotation.y=-angle;burr.add(tooth);}
+      part(new THREE.CylinderGeometry(.18,.12,.42,32),metal,1.15);
+      const beans:InstanceType<typeof THREE.Group>[]=[];
+      const beanGeometry=new THREE.SphereGeometry(1,16,12);
+      for(let i=0;i<28;i++){
+        const bean=new THREE.Group();const shell=new THREE.Mesh(beanGeometry,bronze);shell.scale.set(.14,.21,.1);bean.add(shell);
+        const groove=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(-.02,-.16,.09),new THREE.Vector3(.025,0,.105),new THREE.Vector3(-.02,.16,.09)]),10,.012,5,false),new THREE.MeshStandardMaterial({color:'#382319',roughness:1}));bean.add(groove);beans.push(bean);studio.add(bean);
+      }
+      const grounds=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.025,0),bronze,130);studio.add(grounds);
+      const dummy=new THREE.Object3D();
+      const groundsBed=part(new THREE.CylinderGeometry(.48,.44,.07,48),bronze,.1,studio);
+      const saucer=part(new THREE.CylinderGeometry(.66,.6,.055,64),metal,.035,studio);
+      const brewer=new THREE.Group();studio.add(brewer);
+      const arm=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(.9,2.2,-.2),new THREE.Vector3(.85,2.6,-.2),new THREE.Vector3(.12,2.6,0),new THREE.Vector3(0,2.1,0)]),32,.085,12,false),metal);brewer.add(arm);
+      part(new THREE.CylinderGeometry(.13,.13,.18,32),darkMetal,2.03,brewer);
+      const liquidMaterial=new THREE.MeshPhysicalMaterial({color:'#753d1c',roughness:.18,metalness:0,clearcoat:.8});
+      const stream=part(new THREE.CylinderGeometry(.037,.045,1,16),liquidMaterial,1,studio);
+      const liquid=new THREE.Mesh(new THREE.CylinderGeometry(1,.98,1,64),liquidMaterial);cup.add(liquid);
+      const crema=new THREE.Mesh(new THREE.TorusGeometry(.86,.012,8,64),new THREE.MeshStandardMaterial({color:'#c39860',roughness:.5}));crema.rotation.x=Math.PI/2;cup.add(crema);
+      const steam:InstanceType<typeof THREE.Mesh>[]=[];
+      for(let i=0;i<3;i++){const curve=new THREE.CatmullRomCurve3(Array.from({length:12},(_,j)=>new THREE.Vector3(Math.sin(j*.7+i)*.08+(i-1)*.23,j*.07,0)));const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,24,.009,5,false),new THREE.MeshBasicMaterial({color:'#e6ddbf',transparent:true,opacity:.28}));cup.add(mesh);steam.push(mesh);}
+      const heroPose:Pose={nx:mobile?.06:0,y:mobile?-1.15:-1.78,z:.2,rx:.1,ry:-.16,rz:-.16,scale:mobile?1.12:1.68,lid:0};
+      const pose:Pose={...heroPose};
+      const process={progress:0,active:false};
       let dirty = true;
       const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); dirty = true; };
       const resizeObserver = new ResizeObserver(resize); resizeObserver.observe(document.documentElement); resize();
@@ -116,42 +129,19 @@ export default function ScrollExperience({ children }: { children: ReactNode }) 
       lenis.on('scroll', ScrollTrigger.update);
 
       const context = gsap.context(() => {
-        const sections = Array.from(wrapper.querySelectorAll<HTMLElement>('.hero,.story,.craft,.menu-section,.cta'));
-        const footer = wrapper.querySelector<HTMLElement>('footer');
-
-        // Each chapter begins when its top enters the viewport and settles before it reaches the fold.
-        const travel = (i: number, end = 'top 18%') => {
-          gsap.timeline({
-            scrollTrigger: { trigger: sections[i], start: 'top bottom', end, scrub: .65, invalidateOnRefresh: true },
-          }).fromTo(pose, { ...poses[i - 1] }, { ...poses[i], duration: 1, ease: 'power2.inOut', immediateRender: false }, 0);
-        };
-
-        travel(1);
-        travel(2);
-        travel(3);
-        travel(4, 'top 10%');
-
-        // The cup exits after the story and returns only for the closing composition.
-        if (sections[2] && sections[4]) {
-          ScrollTrigger.create({
-            trigger: sections[2], start: 'top 62%',
-            endTrigger: sections[4], end: 'top 10%',
-            onEnter: () => wrapper.classList.add('cup-away'),
-            onEnterBack: () => wrapper.classList.add('cup-away'),
-            onLeave: () => wrapper.classList.remove('cup-away'),
-            onLeaveBack: () => wrapper.classList.remove('cup-away'),
-          });
-        }
-
-        // The cup leaves the stage before the utility footer, then returns when scrolling back up.
-        if (footer) {
-          ScrollTrigger.create({
-            trigger: footer, start: 'top 82%',
-            onEnter: () => wrapper.classList.add('cup-out'),
-            onLeaveBack: () => wrapper.classList.remove('cup-out'),
-          });
-        }
-
+        const hero=wrapper.querySelector<HTMLElement>('.hero')!;
+        const sequence=wrapper.querySelector<HTMLElement>('.brew-sequence')!;
+        // The cup belongs to the hero and the studio only; it no longer wanders over content.
+        ScrollTrigger.create({trigger:hero,start:'top top',end:'bottom top',onUpdate:self=>{if(!process.active){host.style.opacity=String(1-self.progress);Object.assign(pose,heroPose);dirty=true;}}});
+        host.style.opacity='1';
+        gsap.to(process,{progress:1,ease:'none',scrollTrigger:{trigger:sequence,start:'top top',end:()=>'+='+innerHeight*(mobile?3.2:4.2),pin:true,scrub:.6,invalidateOnRefresh:true,
+          onToggle:self=>{process.active=self.isActive;studio.visible=self.isActive;host.style.opacity=self.isActive?'1':'0';dirty=true;},
+          onUpdate:self=>{
+            const phase=Math.min(3,Math.floor(self.progress*4));
+            sequence.querySelectorAll('.brew-caption').forEach((el,i)=>{el.classList.toggle('is-current',phase===i);el.setAttribute('aria-hidden',String(phase!==i));});
+            sequence.querySelectorAll('.brew-progress span').forEach((el,i)=>{el.classList.toggle('is-current',phase===i);el.setAttribute('aria-hidden',String(phase!==i));});
+            sequence.style.setProperty('--brew-progress',String(self.progress)); dirty=true;
+          }}});
         gsap.utils.toArray<HTMLElement>('.story-copy,.craft-copy,.craft-photo,.craft-steps,.section-heading,.menu-card,.cta-layout,.footer-faq,footer h2').forEach(element => {
           gsap.from(element, { y: 34, opacity: 0, duration: .8, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 92%', once: true } });
         });
@@ -161,17 +151,50 @@ export default function ScrollExperience({ children }: { children: ReactNode }) 
       window.addEventListener('cafe:refresh', refresh);
 
       const lastPose = { ...pose };
+      const clamp=THREE.MathUtils.clamp;
       const tick = (time: number) => {
         lenis.raf(time * 1000);
         if (document.hidden) return;
-        const moved = pose.nx !== lastPose.nx || pose.y !== lastPose.y || pose.z !== lastPose.z
+        if(!process.active){const hero=wrapper.querySelector('.hero')!.getBoundingClientRect();host.style.opacity=hero.bottom>0?String(Math.max(0,Math.min(1,hero.bottom/innerHeight))):'0';}
+        const moved = process.active || pose.nx !== lastPose.nx || pose.y !== lastPose.y || pose.z !== lastPose.z
           || pose.rx !== lastPose.rx || pose.ry !== lastPose.ry || pose.rz !== lastPose.rz
           || pose.scale !== lastPose.scale || pose.lid !== lastPose.lid;
         if (!moved && !dirty) return;
         dirty = false; Object.assign(lastPose, pose);
         const halfWidth = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z * camera.aspect;
-        cup.position.set(pose.nx * halfWidth, pose.y, pose.z); cup.rotation.set(pose.rx, pose.ry, pose.rz); cup.scale.setScalar(pose.scale);
-        lid.position.y = 1.55 + pose.lid; lid.rotation.z = pose.lid * -.13;
+        if(process.active){
+          const p=process.progress;
+          const studioX=mobile?0:halfWidth*.38;
+          studio.position.set(studioX,mobile?-.9:0,0);studio.scale.setScalar(mobile?.75:1);
+
+          cup.visible=p>.39;
+          cup.position.set(studioX,mobile?-1.1:-1.45,0);cup.rotation.set(.22,-.12,0);cup.scale.setScalar(mobile?.65:.77);
+          lid.position.y=1.55+(1-THREE.MathUtils.smoothstep(p,.85,.96))*2.1;
+          lid.position.x=(1-THREE.MathUtils.smoothstep(p,.85,.96))*.65;
+          lid.rotation.z=(1-THREE.MathUtils.smoothstep(p,.85,.96))*.2;
+          lid.visible=p>.8;
+          const grind=clamp((p-.16)/.25,0,1);
+          grinder.visible=p<.46;grinder.position.y=-THREE.MathUtils.smoothstep(p,.4,.46)*.6;grinder.scale.setScalar(1-THREE.MathUtils.smoothstep(p,.4,.46));burr.rotation.y=p*100;
+          beans.forEach((bean,i)=>{const delay=i/28*.19;const fall=clamp((p-delay)/.18,0,1);const angle=i*2.399;const radius=.35+(i%5)*.06;bean.visible=p<.42&&fall<1;bean.position.set(Math.cos(angle)*radius*(1-fall),3.4-fall*1.85+(i%4)*.12,Math.sin(angle)*radius);bean.rotation.set(p*16+i,i*.7+p*12,p*5);bean.scale.setScalar(1-THREE.MathUtils.smoothstep(fall,.8,1));});
+          grounds.visible=p>.17&&p<.43;
+          for(let i=0;i<130;i++){const fall=((p*11+i*.017)%1);const spread=.06+fall*.35;dummy.position.set(Math.sin(i*8.7)*spread,1.0-fall*.9,Math.cos(i*4.3)*spread);dummy.rotation.set(i,p*40+i,i);dummy.scale.setScalar(Math.min(1,grind*5));dummy.updateMatrix();grounds.setMatrixAt(i,dummy.matrix);}grounds.instanceMatrix.needsUpdate=true;
+          groundsBed.visible=p>.18&&p<.44;saucer.visible=p<.44;groundsBed.scale.y=.1+grind*3;
+          brewer.visible=p>.44&&p<.86;brewer.position.y=(1-THREE.MathUtils.smoothstep(p,.44,.5))*1.2;
+          stream.visible=p>.5&&p<.81;stream.position.y=.88;stream.scale.set(1+Math.sin(p*200)*.08,2.15,1);
+          const fill=THREE.MathUtils.smoothstep(p,.5,.81);
+          coffee.position.y=-1.38+fill*2.81;coffee.visible=p>.5;
+          coffee.scale.setScalar(.76+fill*.24);
+          liquid.visible=p>.5;liquid.scale.set(.78+fill*.25,Math.max(.01,fill*2.81),.78+fill*.25);liquid.position.y=-1.38+fill*1.405;
+          body.material.transparent=true;body.material.opacity=p>.5&&p<.81?.25:1;
+          crema.visible=p>.59&&p<.92;crema.position.y=coffee.position.y+.006;crema.scale.setScalar(.3+fill*.7);
+          steam.forEach((mesh,i)=>{mesh.visible=p>.72&&p<.91;mesh.position.set(0,1.5+(p-.72)*2,0);mesh.rotation.y=i+p*6;});
+          // Final presentation settles, with a subtle nod as the lid snaps into place.
+          if(p>.94){cup.rotation.z=-THREE.MathUtils.smoothstep(p,.94,1)*.12;cup.scale.setScalar((mobile?.65:.77)+THREE.MathUtils.smoothstep(p,.94,1)*.15);}
+
+        }else{
+          cup.visible=true;studio.visible=false;liquid.visible=false;crema.visible=false;steam.forEach(mesh=>mesh.visible=false);body.material.opacity=1;
+          cup.position.set(pose.nx * halfWidth, pose.y, pose.z);cup.rotation.set(pose.rx,pose.ry,pose.rz);cup.scale.setScalar(pose.scale);lid.visible=true;lid.position.set(0,1.55,0);lid.rotation.z=0;coffee.position.y=1.46;coffee.scale.setScalar(1);
+        }
         renderer.render(scene, camera);
       };
       gsap.ticker.add(tick);
@@ -195,6 +218,6 @@ export default function ScrollExperience({ children }: { children: ReactNode }) 
 
   return <div className="scroll-journey" ref={root}>
     {children}
-    <div className="webgl-cup" ref={canvasHost} role="img" aria-label="A three-dimensional Parallel Café cup that follows you through the page"/>
+    <div className="webgl-cup" ref={canvasHost} role="img" aria-label="3D beans grinding, coffee pouring, and a Parallel Café cup being sealed"/>
   </div>;
 }

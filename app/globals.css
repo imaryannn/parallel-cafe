@@ -332,3 +332,24 @@ footer h2{margin-top:48px}
  .cta-lede{font-size:12px}
 }
 .menu-image .item-category{top:auto;bottom:12px;left:12px}
+
+/* A pinned coffee studio: four deliberate acts, scrubbed by scroll. */
+.brew-sequence{position:relative;min-height:720px;height:100svh;background:#092e1b;color:var(--cream);padding:8vh 6% 40px;overflow:hidden}
+.brew-copy{position:relative;z-index:5;width:42%;pointer-events:none}
+.brew-intro{font-size:10px;letter-spacing:2px;color:#b6c7a4;margin:0 0 35px}
+.brew-copy h2{font-family:'Lilita One',Impact,sans-serif;font-weight:400;font-size:clamp(55px,6.5vw,100px);line-height:.98;letter-spacing:-.03em}
+.brew-copy h2 em{font-family:Georgia,serif;font-size:.85em;color:#c4d79e}
+.brew-captions{position:relative;margin-top:55px;min-height:140px}
+.brew-caption{position:absolute;inset:0;opacity:0;transform:translateY(18px);transition:opacity .45s,transform .65s}
+.brew-caption.is-current{opacity:1;transform:none}
+.brew-caption h3{font-weight:500;font-size:24px;letter-spacing:-.5px;margin:0 0 14px}
+.brew-caption p{color:#b6c7a4;font-size:13px;line-height:1.7;max-width:280px}
+.brew-footer{position:absolute;bottom:35px;left:6%;right:6%;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:30px;font-size:10px}
+.brew-footer>a{border-bottom:1px solid #64795e;padding-bottom:7px}
+.brew-progress{display:flex;gap:28px;color:#768d71}
+.brew-progress span{transition:color .4s;padding-bottom:10px;border-bottom:1px solid transparent}
+.brew-progress .is-current{color:var(--cream);border-color:var(--cream)}
+.brew-scroll{letter-spacing:1.5px;font-size:8px}
+.brew-sequence:after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:#bfd299;transform:scaleX(var(--brew-progress,0));transform-origin:left}
+@media(max-width:760px){.brew-sequence{padding:35px 6% 25px;min-height:740px}.brew-copy{width:100%}.brew-intro{margin-bottom:17px;font-size:8px}.brew-copy h2{font-size:46px;line-height:1;max-width:100%}.brew-copy h2 br{display:none}.brew-copy h2 em{margin-left:8px;font-size:.83em}.brew-captions{margin-top:22px;min-height:70px}.brew-caption h3{font-size:18px;margin-bottom:6px}.brew-caption p{font-size:11px;max-width:100%}.brew-footer{bottom:23px;flex-wrap:wrap;gap:20px}.brew-progress{order:-1;flex-basis:100%;justify-content:space-between;gap:10px;font-size:9px}.brew-footer>a{font-size:9px}.brew-scroll{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.brew-sequence{display:none}}
