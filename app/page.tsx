@@ -1,25 +1,29 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import ScrollExperience from './components/ScrollExperience';
-import { ArrowUpRight, ArrowRight, Plus, Minus, X, Menu, Coffee, Sprout, Heart } from 'lucide-react';
+import PageMotion from './components/PageMotion';
+import CafeAtmosphere from './components/CafeAtmosphere';
+import { ArrowUpRight, ArrowRight, Plus, Minus, X, Menu, Heart } from 'lucide-react';
 
 type Drink = { name: string; type: 'Coffee' | 'Matcha' | 'Bakery'; note: string; price: string; image: string };
 
 const drinks: Drink[] = [
-  { name: 'The everyday flat white', type: 'Coffee', note: 'Double espresso. Silky milk. Perfect balance.', price: '₹240', image: 'photo-1570968915860-54d5c301fa9f' },
-  { name: 'A little cold brew', type: 'Coffee', note: 'Slow steeped, smooth, and worth the wait.', price: '₹260', image: 'photo-1517701604599-bb29b565090c' },
-  { name: 'The slow latte', type: 'Coffee', note: 'A softer pour for a slower kind of morning.', price: '₹250', image: 'photo-1461023058943-07fcbe16d735' },
-  { name: 'A proper espresso', type: 'Coffee', note: 'Short, rich, and straight to the point.', price: '₹180', image: 'photo-1510707577719-ae7c14805e3a' },
-  { name: 'Your matcha moment', type: 'Matcha', note: 'Earthy matcha meets creamy oat milk.', price: '₹290', image: 'photo-1515823064-d6e0c04616a7' },
-  { name: 'Iced matcha, easy', type: 'Matcha', note: 'Bright, cold, and quietly energising.', price: '₹300', image: 'photo-1536256263959-770b48d82b0a' },
-  { name: 'The butter half', type: 'Bakery', note: 'Golden layers. A beautifully flaky affair.', price: '₹180', image: 'photo-1555507036-ab1f4038808a' },
-  { name: 'Cinnamon, always', type: 'Bakery', note: 'Warm spice, soft crumb, no sharing required.', price: '₹190', image: 'photo-1509365465985-25d11c17e812' },
-];
-
-const craftSteps = [
-  ['01', 'Sourced with care', 'Beans with a story, chosen for the cup they make.'],
-  ['02', 'Brewed slowly', 'Recipes dialled in daily. Never rushed.'],
-  ['03', 'Finished by hand', 'Poured for your kind of day, one cup at a time.'],
+  { name: 'Flat white', type: 'Coffee', note: 'Double espresso. Silky milk. Perfect balance.', price: '₹240', image: 'photo-1570968915860-54d5c301fa9f' },
+  { name: 'Cold brew', type: 'Coffee', note: 'Slow steeped, smooth, and worth the wait.', price: '₹260', image: 'photo-1581996323441-538096e854b9' },
+  { name: 'Iced latte', type: 'Coffee', note: 'Espresso, cold milk, and plenty of ice.', price: '₹250', image: 'photo-1461023058943-07fcbe16d735' },
+  { name: 'Espresso', type: 'Coffee', note: 'Short, rich, and straight to the point.', price: '₹180', image: 'photo-1510707577719-ae7c14805e3a' },
+  { name: 'Cappuccino', type: 'Coffee', note: 'Rich espresso under a cloud of velvety foam.', price: '₹250', image: 'https://images.pexels.com/photos/36010234/pexels-photo-36010234/free-photo-of-close-up-of-creamy-cappuccino-in-ceramic-cup.jpeg?auto=compress&cs=tinysrgb&w=900' },
+  { name: 'Americano', type: 'Coffee', note: 'A double shot, lengthened with hot water.', price: '₹210', image: 'https://images.pexels.com/photos/793570/pexels-photo-793570.jpeg?auto=compress&cs=tinysrgb&w=900' },
+  { name: 'Mocha', type: 'Coffee', note: 'Espresso, chocolate, and a soft cream finish.', price: '₹290', image: 'https://images.pexels.com/photos/17506134/pexels-photo-17506134.jpeg?auto=compress&cs=tinysrgb&w=900' },
+  { name: 'Matcha latte', type: 'Matcha', note: 'Earthy matcha meets creamy oat milk.', price: '₹290', image: 'photo-1515823064-d6e0c04616a7' },
+  { name: 'Oat matcha', type: 'Matcha', note: 'Smooth matcha, softened with oat milk.', price: '₹300', image: 'photo-1536256263959-770b48d82b0a' },
+  { name: 'Iced matcha', type: 'Matcha', note: 'Whisked matcha, chilled milk, and plenty of ice.', price: '₹310', image: 'https://images.pexels.com/photos/8004561/pexels-photo-8004561.jpeg?auto=compress&cs=tinysrgb&w=900' },
+  { name: 'Butter croissant', type: 'Bakery', note: 'Golden layers. A beautifully flaky affair.', price: '₹180', image: 'photo-1555507036-ab1f4038808a' },
+  { name: 'Cinnamon bun', type: 'Bakery', note: 'Warm spice, soft crumb, no sharing required.', price: '₹190', image: 'photo-1509365465985-25d11c17e812' },
+  { name: 'Chocolate chip cookie', type: 'Bakery', note: 'Golden edges, a soft centre, and chocolate chips.', price: '₹150', image: 'https://images.pexels.com/photos/9424236/pexels-photo-9424236.jpeg?auto=compress&cs=tinysrgb&w=900' },
+  { name: 'Chocolate brownie', type: 'Bakery', note: 'Deep cocoa, a fudgy middle, a crackly top.', price: '₹220', image: 'https://images.pexels.com/photos/14576527/pexels-photo-14576527.jpeg?auto=compress&cs=tinysrgb&w=900' },
+  { name: 'Lemon cake', type: 'Bakery', note: 'Soft lemon sponge with a bright, sweet finish.', price: '₹200', image: 'https://images.pexels.com/photos/8478182/pexels-photo-8478182.jpeg?auto=compress&cs=tinysrgb&w=900' },
+  { name: 'Blueberry muffin', type: 'Bakery', note: 'A tender crumb with pockets of juicy blueberries.', price: '₹190', image: 'https://images.pexels.com/photos/13600669/pexels-photo-13600669.jpeg?auto=compress&cs=tinysrgb&w=900' },
 ];
 
 const faqs = [
@@ -56,11 +60,30 @@ export default function Home() {
   const [mobile, setMobile] = useState(false);
   const [selected, setSelected] = useState<Drink | null>(null);
   const [faq, setFaq] = useState<number | null>(0);
+  const [saved, setSaved] = useState<string[]>([]);
+  const [savedReady, setSavedReady] = useState(false);
+  const [savedOnly, setSavedOnly] = useState(false);
+  const [finder, setFinder] = useState(false);
+  const [mood, setMood] = useState('A slow morning');
+  const match = drinks[mood === 'A bold start' ? 3 : mood === 'An afternoon pause' ? 1 : 0];
+
+  useEffect(() => {
+    try {
+      const stored: unknown = JSON.parse(localStorage.getItem('parallel-favourites') || '[]');
+      if (Array.isArray(stored)) setSaved(stored.filter((name): name is string => typeof name === 'string' && drinks.some(d => d.name === name)));
+    } catch { /* Storage is optional. */ }
+    setSavedReady(true);
+  }, []);
+  useEffect(() => {
+    if (savedReady) try { localStorage.setItem('parallel-favourites', JSON.stringify(saved)); } catch { /* Keep in-memory favourites. */ }
+  }, [saved, savedReady]);
+  const toggleSaved = (name: string) => setSaved(items => items.includes(name) ? items.filter(item => item !== name) : [...items, name]);
   const dialogRef = useRef<HTMLElement>(null);
+  const openerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (!selected) return;
-    const previous = document.activeElement as HTMLElement;
+    const previous = openerRef.current;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const handler = (e: KeyboardEvent) => {
@@ -74,35 +97,31 @@ export default function Home() {
       }
     };
     document.addEventListener('keydown', handler);
-    return () => { document.body.style.overflow = overflow; document.removeEventListener('keydown', handler); previous?.focus(); };
+    return () => { document.body.style.overflow = overflow; document.removeEventListener('keydown', handler); previous?.focus({ preventScroll: true }); };
   }, [selected]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => window.dispatchEvent(new Event('cafe:refresh')));
     return () => cancelAnimationFrame(id);
-  }, [filter]);
+  }, [filter, savedOnly, saved, finder, faq]);
 
-  const visibleDrinks = drinks.filter(d => filter === 'All' || d.type === filter);
+  const visibleDrinks = drinks.filter(d => (filter === 'All' || d.type === filter) && (!savedOnly || saved.includes(d.name)));
 
   return (
     <main id="home">
+      <PageMotion />
       <ScrollExperience>
-        <section className="hero">
+        <section className="hero" id="ritual" aria-label="Parallel Café, from bean to cup">
           <header>
             <a className="brand" href="#home" aria-label="Parallel Café home"><Mark /><span>PARALLEL<br />CAFÈ</span></a>
-            <nav className={mobile ? 'nav open' : 'nav'} aria-label="Main navigation">
+            <nav className={mobile ? 'nav open' : 'nav'} id="main-navigation" aria-label="Main navigation">
               {[['Home', 'home'], ['Our story', 'story'], ['The craft', 'craft'], ['The menu', 'menu']].map(([label, id], i) =>
                 <a key={id} className={i === 0 ? 'active' : ''} href={'#' + id} onClick={() => setMobile(false)}>{label}</a>
               )}
             </nav>
             <a className="visit-link" href="#visit">COME SAY HELLO <ArrowUpRight size={18} /></a>
-            <button className="mobile-toggle" onClick={() => setMobile(!mobile)} aria-expanded={mobile} aria-label="Toggle menu">{mobile ? <X /> : <Menu />}</button>
+            <button className="mobile-toggle" onClick={() => setMobile(!mobile)} aria-expanded={mobile} aria-controls="main-navigation" aria-label="Toggle menu">{mobile ? <X /> : <Menu />}</button>
           </header>
-
-          <div className="hero-meta">
-            <span>COFFEE, COMPANY &amp; A LITTLE IN BETWEEN.</span>
-            <span>YOUR DAILY MOMENT OF PARALLEL</span>
-          </div>
 
           <h1 className="hero-giant" aria-label="Parallel Café — good coffee, better company">
             <span>PARALLEL</span>
@@ -116,133 +135,124 @@ export default function Home() {
             </div>
             <div className="hero-lower-right">
               <p>A little pause. A great cup of coffee. A place where your day comes together.</p>
-              <a className="scroll-cue" href="#story"><span>SCROLL TO UNFOLD</span><i /></a>
+              <button className="scroll-cue" type="button" data-brew-start><span>SCROLL TO MAKE YOUR COFFEE</span><i /></button>
             </div>
           </div>
 
           <Cup />
+          <div className="hero-process" aria-label="The making of a Parallel latte">
+            <div className="process-captions">
+              {[
+                ['It starts with', 'a good bean.', 'Whole beans. Freshly ground. Nothing in between.'],
+                ['A little', 'precision.', 'Ground to order. Balanced, tamped, ready.'],
+                ['Under pressure.', 'Into something good.', 'A rich double shot, drawn slowly and carefully.'],
+                ['The softer', 'side of coffee.', 'Silky milk meets espresso. A little art follows.'],
+                ['Your daily', 'Parallel.', 'Lid on. World off. Take a little moment with you.'],
+              ].map(([first, second, description], i) =>
+                <div className="process-caption" key={first} aria-hidden={i !== 0}>
+                  <h2>{first}<br /><em>{second}</em></h2>
+                  <p>{description}</p>
+                </div>
+              )}
+            </div>
+            <div className="process-bottom">
+              <nav className="process-chapters" aria-label="Coffee making stages">
+                {['The beans', 'The grind', 'The espresso', 'The milk', 'Your Parallel'].map((step, i) =>
+                  <button key={step} type="button" data-brew-step={i}>{step}</button>
+                )}
+              </nav>
+              <a href="#story" className="process-skip">Explore the café <ArrowUpRight size={14} /></a>
+            </div>
+            <div className="process-track" aria-hidden="true"><i /></div>
+          </div>
         </section>
+        {[
+          ['beans', 'Good things', 'start small.', 'Whole beans, chosen for character. The beginning of every Parallel cup.'],
+          ['grind', 'A little', 'precision.', 'Freshly ground. Carefully measured. A small ritual that makes all the difference.'],
+          ['espresso', 'Worth', 'the wait.', 'Water, pressure, and a little patience. A rich double shot finds its way into your cup.'],
+          ['milk', 'Something', 'softer.', 'Silky milk folds into espresso. A steady hand leaves a little art on the surface.'],
+          ['ready', 'Made for', 'your day.', 'One good cup. A moment to yourself. Take it with you, or stay a little longer.'],
+        ].map(([id, title, emphasis, copy], index) => (
+          <section className="brew-chapter" id={index === 0 ? 'craft' : id} key={id} aria-labelledby={`chapter-${id}`}>
+            <div className="brew-copy">
+              <h2 id={`chapter-${id}`}>{title}<br /><em>{emphasis}</em></h2>
+              <p>{copy}</p>
+              {index === 4 && <a className="cream-button" href="#menu">Find your favourite <ArrowUpRight size={18} /></a>}
+            </div>
+          </section>
+        ))}
+      </ScrollExperience>
 
-        <div className="ticker" aria-hidden="true">
-          <div className="ticker-track">
-            {[0, 1].map(copy =>
-              <div className="ticker-group" key={copy}>
-                <span>GOOD COFFEE</span><Mark />
-                <span>BETTER COMPANY</span><Mark />
-                <span>SAME WAVELENGTH</span><Mark />
-                <span>PARALLEL CAFÈ</span><Mark />
-                <span>FIND YOUR LITTLE PAUSE.</span><Mark />
+      <div className="cafe-pages">
+        <CafeAtmosphere />
+        <section id="story" className="story section" aria-labelledby="story-heading">
+          <div className="story-layout">
+            <div className="story-copy">
+              <h2 id="story-heading" className="story-title kinetic-heading"><span>Different days.</span><em>Same wavelength.</em></h2>
+              <div className="story-note">
+                <p className="story-lede">Some things just go together.<br />Coffee and conversation.<br />You and your favourite corner.</p>
+                <div className="story-detail"><p className="story-body">That’s the idea behind Parallel. A place for crossing paths, finding your people, or taking a moment that’s entirely yours.</p>
+                <a className="story-link" href="#menu">Find your usual <ArrowUpRight size={19} /></a></div>
               </div>
-            )}
-          </div>
-        </div>
-
-        <section id="story" className="story section">
-          <div className="eyebrow"><span>OUR KIND OF PLACE</span><span>MEET PARALLEL ↗</span></div>
-          <div className="story-stage">
-            <h2 className="story-title">Different days.<br /><em>Same wavelength.</em></h2>
-            <div className="story-note">
-              <p className="story-lede">Some things just go together. Coffee and conversation. You and your favourite corner.</p>
-              <p className="story-body">That’s the idea behind Parallel. A space for crossing paths, finding your people, or simply enjoying a moment that’s entirely yours. Nothing complicated. Just good things, side by side.</p>
-              <a className="text-link" href="#craft">Made with care <ArrowUpRight size={19} /></a>
             </div>
-            
-          </div>
-          <div className="values">
-            <span><Coffee /> Thoughtfully brewed</span>
-            <span><Sprout /> A little closer to nature</span>
-            <span><Heart /> Made for good company</span>
-          </div>
-        </section>
 
-        <section className="brew-sequence" id="ritual" aria-label="From bean to cup, a scroll-driven coffee-making sequence">
-          <div className="brew-copy">
-            <p className="brew-intro">A LITTLE CARE. EVERY STEP.</p>
-            <h2>From bean.<br/><em>To your cup.</em></h2>
-            <div className="brew-captions">
-              <div className="brew-caption is-current"><h3>Good things start here.</h3><p>Whole beans. Full of possibility.</p></div>
-              <div className="brew-caption"><h3>A finer kind of ritual.</h3><p>Freshly ground. Ready for the slow pour.</p></div>
-              <div className="brew-caption"><h3>Worth the wait.</h3><p>Watch your coffee find its way into the cup.</p></div>
-              <div className="brew-caption"><h3>Made for your day.</h3><p>One last touch. Your Parallel is ready.</p></div>
-            </div>
           </div>
-          <div className="brew-footer"><a href="#craft">Skip to the craft ↗</a><div className="brew-progress" aria-label="Coffee-making steps">{['The beans','The grind','The pour','Your Parallel'].map((step,i)=><span key={step} className={i===0?'is-current':''}>{step}</span>)}</div><span className="brew-scroll">KEEP SCROLLING ↓</span></div>
-        </section>
-
-        <section id="craft" className="craft section">
-          <div className="eyebrow"><span>THE CRAFT</span><span>SLOW BY DESIGN</span></div>
-          <div className="craft-stage">
-            <div className="craft-copy">
-              <span className="craft-kicker">FROM BEAN TO CUP</span>
-              <h2>Made<br />by <em>hand.</em></h2>
-              <p>We take our time with the things that matter. Beans chosen for character, milk steamed to a quiet gloss, and every cup finished by hand. Nothing rushed. Nothing extra.</p>
-              <a className="text-link" href="#menu">See what we’re pouring <ArrowUpRight size={19} /></a>
-            </div>
-            <figure className="craft-photo">
-              <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1400&q=85" alt="Coffee being carefully poured at Parallel Café" loading="lazy" />
-              <figcaption><span>THE SLOW POUR</span><span>MADE TO ORDER ↗</span></figcaption>
-            </figure>
-          </div>
-          <ol className="craft-steps">
-            {craftSteps.map(([n, title, copy]) =>
-              <li key={n}><span>{n}</span><div><strong>{title}</strong><p>{copy}</p></div></li>
-            )}
-          </ol>
         </section>
 
         <section className="menu-section section" id="menu">
-          <div className="eyebrow"><span>THE GOOD STUFF</span><span>A CUP FOR EVERY MOOD</span></div>
-          <div className="menu-head">
-            <h2>Meet your<br /><em>usual.</em></h2>
+          <div className={finder ? 'menu-head finder-open' : 'menu-head'}>
+            <h2>Your daily<br /><em>favourites.</em></h2>
             <div className="menu-intro">
-              <p>Your morning pick-me-up. Your afternoon excuse.<br />A few things we think you’ll love.</p>
+              <p>For early starts and long afternoons.<br />Find something to call your usual.</p>
               <div className="filters" aria-label="Menu categories">
                 {['All', 'Coffee', 'Matcha', 'Bakery'].map(x =>
                   <button key={x} className={filter === x ? 'selected' : ''} onClick={() => setFilter(x)} aria-pressed={filter === x}>{x}</button>
                 )}
+                <button className={savedOnly ? 'selected' : ''} aria-pressed={savedOnly} onClick={() => setSavedOnly(!savedOnly)}>Saved ({saved.length})</button>
               </div>
+              <button className="finder-toggle" aria-expanded={finder} aria-controls="drink-finder" onClick={() => setFinder(!finder)}>Help me choose {finder ? <Minus size={15} /> : <Plus size={15} />}</button>
             </div>
+          {finder && <div className="drink-finder" id="drink-finder">
+            <div><span className="eyebrow">WHAT KIND OF MOMENT?</span><div className="mood-options">
+              {['A bold start', 'A slow morning', 'An afternoon pause'].map(option => <button key={option} aria-pressed={mood === option} onClick={() => setMood(option)}>{option}</button>)}
+            </div></div>
+            <div className="finder-match" aria-live="polite"><span>We’d pour you a</span><strong>{match.name}.</strong><p>{match.note}</p><button className="text-link" onClick={e => { openerRef.current = e.currentTarget; setSelected(match); }}>Take a look <ArrowUpRight size={17} /></button></div>
+          </div>}
           </div>
-          <div className="menu-grid">
-            {visibleDrinks.map(d =>
-              <button className="menu-card" key={d.name} onClick={() => setSelected(d)}>
-                <div className="menu-image">
-                  <img src={'https://images.unsplash.com/' + d.image + '?auto=format&fit=crop&w=800&q=85'} alt={d.name} loading="lazy" />
-                  <span className="item-category">{d.type}</span>
-                  <span className="item-plus"><Plus size={22} /></span>
-                </div>
-                <div className="item-title"><h3>{d.name}</h3><span>{d.price}</span></div>
-                <p>{d.note}</p>
+          <div className="menu-display">
+          <div className="menu-grid" aria-live="polite" aria-label={`${filter} menu`}>
+            {visibleDrinks.map((d, index) =>
+              <button className="menu-card" key={d.name} onClick={e => { openerRef.current = e.currentTarget; setSelected(d); }}>
+                <span className="menu-item-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <div className="menu-item-copy"><div className="item-title"><h3>{d.name}</h3><span>{d.price}</span></div>
+                <p>{d.note}</p></div><span className="menu-item-open" aria-hidden="true"><ArrowUpRight size={21} /></span>
               </button>
             )}
           </div>
-          <p className="menu-footnote">A taste of what’s to come. Illustrative menu &amp; prices.</p>
+          {visibleDrinks.length === 0 && <div className="menu-empty"><Heart size={23} /><p>{saved.length ? 'No saved favourites in this category.' : 'A little list of your favourites.'}</p><span>{saved.length ? 'Try another category to see your saved drinks.' : 'Open a menu item and tap Save for later to start your list.'}</span><button className="text-link" onClick={() => { setSavedOnly(false); setFilter('All'); }}>Explore the menu <ArrowRight size={16} /></button></div>}
+          <p className="menu-footnote">Sample menu and prices.</p>
+          </div>
         </section>
 
         <section className="cta section" id="closing">
-          <div className="eyebrow"><span>ONE MORE GOOD MOMENT</span><span>YOUR PLACE IS READY</span></div>
           <div className="cta-stage">
-            <h2 className="cta-giant">Side<br />by <em>side.</em></h2>
+            <h2 className="cta-giant kinetic-heading"><span>Side by</span> <em>side.</em></h2>
             <div className="cta-note">
-              <span className="cta-kicker">A NEW CHAPTER, COMING SOON</span>
-              <p className="cta-lede">A little pause, a great cup, and a place where your day comes together. Your next favourite cup is waiting.</p>
+              <p className="cta-lede">Your favourite coffee.<br />Your favourite company.<br />A little more time for both.</p>
               <div className="cta-actions">
-                <a className="green-button" href="#menu">Find your favourite <ArrowUpRight size={19} /></a>
+                <a className="closing-menu-link" href="#menu"><span>Explore the <em>menu.</em></span><ArrowUpRight size={36} strokeWidth={1.4} aria-hidden="true" /></a>
                 <a className="text-link" href="#visit">Come say hello <ArrowUpRight size={18} /></a>
               </div>
             </div>
-            
           </div>
-          <div className="cta-foot">
-            <span>ROOM FOR YOUR KIND OF DAY.</span>
-            <span>PARALLEL CAFÈ / SIDE BY SIDE.</span>
-          </div>
+
         </section>
+
+      </div>
 
         <footer id="visit">
           <div className="footer-faq">
             <div>
-              <span className="eyebrow">A FEW LITTLE THINGS</span>
               <h3>Before you<br /><em>drop by.</em></h3>
             </div>
             <div className="faq-list">
@@ -254,30 +264,27 @@ export default function Home() {
               )}
             </div>
           </div>
-          <div className="footer-top">
-            <span className="eyebrow">YOUR COFFEE. YOUR PEOPLE. YOUR PLACE.</span>
-            <span className="coming"><i /> A NEW CHAPTER, COMING SOON</span>
-          </div>
-          <h2>LET’S BE<br /><span>PARALLEL.</span><a href="#home" aria-label="Back to top"><ArrowUpRight /></a></h2>
+          <h2>LET’S BE<br /><span>PARALLEL<span className="footer-period">.</span></span><a href="#home" aria-label="Back to top"><ArrowUpRight /></a></h2>
           <div className="footer-bottom">
             <a className="brand" href="#home"><Mark /><span>PARALLEL CAFÈ</span></a>
             <span>Good things happen side by side.</span>
             <span>© {new Date().getFullYear()} Parallel Cafè</span>
           </div>
         </footer>
-      </ScrollExperience>
 
       {selected && (
         <div className="modal-backdrop" onClick={() => setSelected(null)}>
           <section ref={dialogRef} role="dialog" aria-modal="true" aria-label={selected.name} className="product-modal" onClick={e => e.stopPropagation()} onKeyDown={e => { if (e.key === 'Escape') setSelected(null); }}>
             <button autoFocus className="modal-close" aria-label="Close menu details" onClick={() => setSelected(null)}><X /></button>
-            <img src={'https://images.unsplash.com/' + selected.image + '?auto=format&fit=crop&w=700&q=85'} alt={selected.name} />
+            <img className={selected.name === 'Cold brew' ? 'menu-detail-photo cold-brew-photo' : 'menu-detail-photo'} src={selected.image.startsWith('https://') ? selected.image : `https://images.unsplash.com/${selected.image}?auto=format&fit=crop&w=900&q=85`} alt={selected.name} />
+
             <div>
               <span className="eyebrow">{selected.type} / PARALLEL FAVOURITES</span>
               <h2>{selected.name}</h2>
               <p>{selected.note}</p>
               <strong>{selected.price}</strong>
               <p className="detail-note">A preview of our menu. Ordering will be available when the café opens.</p>
+              <button className="save-favourite" aria-pressed={saved.includes(selected.name)} onClick={() => toggleSaved(selected.name)}><Heart size={18} fill={saved.includes(selected.name) ? 'currentColor' : 'none'} />{saved.includes(selected.name) ? 'Saved for later' : 'Save for later'}</button>
               <button className="green-button" onClick={() => setSelected(null)}>Keep exploring <ArrowRight size={18} /></button>
             </div>
           </section>

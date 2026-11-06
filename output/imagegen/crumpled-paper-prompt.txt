@@ -1,0 +1,5 @@
+Generated with the built-in image-generation tool.
+Final website asset: public/textures/crumpled-paper.webp
+
+Prompt:
+Use case: photorealistic-natural. Asset type: seamless website background paper texture, square 1536x1536 if available. Create a high-quality top-down orthographic scan of an off-white sheet of uncoated paper that was gently crumpled into a loose ball, then fully opened and flattened. Irregular natural intersecting fine creases and a few wider soft wrinkles, subtle fibers, delicate realistic light-and-shadow relief. The paper fills the entire image edge to edge with no paper edges visible. Distribute the wrinkles naturally across the surface, with broad quiet areas between them so dark website text remains legible. Neutral warm-white monochrome color, diffuse soft lighting; medium-low contrast wrinkles, light gray shadows and near-white highlights. Seamlessly tileable on all edges. No objects, no text, no graphics, no stains, no sepia, no dark vignette, no grunge, no folds so deep they create dark lines, no polygonal geometric pattern. Real tactile flattened crumpled paper rather than fabric or marble.
